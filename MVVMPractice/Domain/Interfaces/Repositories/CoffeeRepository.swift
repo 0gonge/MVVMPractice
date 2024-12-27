@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+protocol CoffeeRepository {
+  @discardableResult
+  func fetchCoffeelist(
+    completion: @escaping (Result<[CoffeeModel], Error>) -> Void
+  ) -> Cancellable?
+}
