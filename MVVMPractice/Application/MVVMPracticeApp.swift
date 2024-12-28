@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct MVVMPracticeApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  var body: some Scene {
+    WindowGroup {
+      let coffeeRepository = DefaultCoffeeRepository()
+      let fetchSortedCoffeeUseCase = DefaultFetchSortedCoffeeUseCase(coffeeRepository: coffeeRepository)
+      let mainViewModel = MainViewModel(fetchSortedCoffeeUseCase: fetchSortedCoffeeUseCase)
+      
+      MainView(viewModel: mainViewModel)
     }
+  }
 }

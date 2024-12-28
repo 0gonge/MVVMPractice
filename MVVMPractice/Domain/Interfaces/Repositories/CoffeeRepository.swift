@@ -7,9 +7,13 @@
 
 import Foundation
 
+import Alamofire
+
 protocol CoffeeRepository {
   @discardableResult
   func fetchCoffeelist(
+    baseURL: String,
     completion: @escaping (Result<[CoffeeModel], Error>) -> Void
   ) -> Cancellable?
 }
+

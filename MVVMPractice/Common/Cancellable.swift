@@ -7,6 +7,20 @@
 
 import Foundation
 
+import Alamofire
+
 protocol Cancellable {
   func cancel()
+}
+
+final class AlamofireCancellable: Cancellable {
+  private var request: DataRequest?
+  
+  init(request: DataRequest?) {
+    self.request = request
+  }
+  
+  func cancel() {
+    request?.cancel()
+  }
 }

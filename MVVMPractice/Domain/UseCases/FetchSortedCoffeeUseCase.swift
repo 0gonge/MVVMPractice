@@ -8,12 +8,10 @@
 import Foundation
 
 protocol FetchSortedCoffeeUseCase {
-  func execute(
-    completion: @escaping (Result<[CoffeeModel], Error>) -> Void
-  ) -> Cancellable?
+  func execute(baseURL: String, completion: @escaping (Result<[CoffeeModel], Error>) -> Void) -> Cancellable?
 }
 
-final private class DefaultFetchSortedCoffeeUseCase: FetchSortedCoffeeUseCase {
+final class DefaultFetchSortedCoffeeUseCase: FetchSortedCoffeeUseCase {
   
   private let coffeeRepository: CoffeeRepository
   
@@ -21,20 +19,18 @@ final private class DefaultFetchSortedCoffeeUseCase: FetchSortedCoffeeUseCase {
     self.coffeeRepository = coffeeRepository
   }
   
-  func execute(
-    completion: @escaping (Result<[CoffeeModel], Error>) -> Void
-  ) -> Cancellable? {
-    return coffeeRepository.fetchCoffeelist { result in
-      switch result {
-      case .success(let coffeeModels):
-        let filteredCoffes = coffeeModels.filter {
-          let lowercasedTitle = $0.title.lowercased()
-          return lowercasedTitle.contains("latte")
+  func execute(baseURL: String, completion: @escaping (Result<[CoffeeModel], Error>) -> Void) -> Cancellable? {
+      return coffeeRepository.fetchCoffeelist(baseURL: baseURL) { result in
+        switch result {
+        case .success(let coffeeModels):
+          let filteredCoffees = coffeeModels.filter {
+            let lowercasedTitle = $0.title.lowercased()
+            return lowercasedTitle.contains("latte")
+          }
+          completion(.success(filteredCoffees))
+        case .failure(let error):
+          completion(.failure(error))
         }
-        completion(.success(filteredCoffes))
-      case .failure(let error):
-        completion(.failure(error))
       }
     }
-  }
 }
